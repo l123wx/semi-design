@@ -85,7 +85,7 @@ export default class PreviewInner extends BaseComponent<PreviewInnerProps, Previ
 
     get adapter(): PreviewInnerAdapter<PreviewInnerProps, PreviewInnerStates> {
         return {
-            ...super.adapter,
+            ...super.baseAdapter,
             getIsInGroup: () => this.isInGroup(),
             disabledBodyScroll: () => {
                 const { getPopupContainer } = this.props;
@@ -162,7 +162,7 @@ export default class PreviewInner extends BaseComponent<PreviewInnerProps, Previ
                     headerDom && headerDom.contains(target) ||
                     footerDom && footerDom.contains(target) ||
                     leftIconDom && leftIconDom.contains(target) ||
-                    rightIconDom && rightIconDom.contains(target)  
+                    rightIconDom && rightIconDom.contains(target)
                 ) {
                     // Move in the operation area, return false
                     return false;
@@ -207,9 +207,9 @@ export default class PreviewInner extends BaseComponent<PreviewInnerProps, Previ
         this.imageWrapRef = null;
         this.imageRef = React.createRef<PreviewImage>();
         this.headerRef = React.createRef<HTMLElement>();
-        this.footerRef= React.createRef<HTMLElement>();
-        this.leftIconRef= React.createRef<HTMLDivElement>();
-        this.rightIconRef= React.createRef<HTMLDivElement>();
+        this.footerRef = React.createRef<HTMLElement>();
+        this.leftIconRef = React.createRef<HTMLDivElement>();
+        this.rightIconRef = React.createRef<HTMLDivElement>();
     }
 
     static getDerivedStateFromProps(props: PreviewInnerProps, state: PreviewInnerStates) {
@@ -323,7 +323,7 @@ export default class PreviewInner extends BaseComponent<PreviewInnerProps, Previ
         this.foundation.handleMouseDown(e);
     }
 
-    handleWheel = (e) => {
+    handleWheel = (e: WheelEvent) => {
         this.foundation.handleWheel(e);
     }
 
@@ -402,7 +402,7 @@ export default class PreviewInner extends BaseComponent<PreviewInnerProps, Previ
             visible && <Portal
                 getPopupContainer={getPopupContainer}
                 style={wrapperStyle}
-            >  
+            >
                 {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
                 <div
                     className={previewWrapperCls}
@@ -412,7 +412,7 @@ export default class PreviewInner extends BaseComponent<PreviewInnerProps, Previ
                     ref={this.registryImageWrapRef}
                     onMouseMove={this.handleMouseMove}
                 >
-                    <Header ref={this.headerRef} className={cls(hideViewerCls)} onClose={this.handlePreviewClose} renderHeader={renderHeader} closable={closable}/>
+                    <Header ref={this.headerRef} className={cls(hideViewerCls)} onClose={this.handlePreviewClose} renderHeader={renderHeader} closable={closable} />
                     <PreviewImage
                         ref={this.imageRef}
                         src={imgSrc[currentIndex]}

@@ -34,9 +34,9 @@ export default class PreviewImage extends BaseComponent<PreviewImageProps, Previ
         zoom: undefined,
     };
 
-    get adapter(): PreviewImageAdapter<PreviewImageProps, PreviewImageStates> {
+    get adapter(): PreviewImageAdapter {
         return {
-            ...super.adapter,
+            ...super.baseAdapter,
             getContainer: () => {
                 return this.containerRef.current;
             },

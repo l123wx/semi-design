@@ -1,6 +1,18 @@
-import BaseFoundation, { DefaultAdapter } from "../base/foundation";
+import BaseFoundation, { BaseAdapterProps, BaseAdapterStates, DefaultAdapter } from "../base/foundation";
 
-export interface PreviewImageAdapter<P = Record<string, any>, S = Record<string, any>> extends DefaultAdapter<P, S> {
+export interface AdapterStates extends BaseAdapterStates {
+    translate: Translate;
+    width: number;
+    height: number;
+    currZoom: number
+}
+
+export interface AdapterProps extends BaseAdapterProps {
+    rotation?: number;
+    [key: string]: any
+}
+
+export interface PreviewImageAdapter extends DefaultAdapter<AdapterProps, AdapterStates> {
     getContainer: () => HTMLDivElement;
     getImage: () => HTMLImageElement;
     setLoading: (loading: boolean) => void;
@@ -50,8 +62,8 @@ const DefaultDOMRect = {
     y: 0,
     toJSON: () => ({})
 };
-export default class PreviewImageFoundation<P = Record<string, any>, S = Record<string, any>> extends BaseFoundation<PreviewImageAdapter<P, S>, P, S> {
-    constructor(adapter: PreviewImageAdapter<P, S>) {
+export default class PreviewImageFoundation extends BaseFoundation<PreviewImageAdapter> {
+    constructor(adapter: PreviewImageAdapter) {
         super({ ...adapter });
     }
 
@@ -75,16 +87,6 @@ export default class PreviewImageFoundation<P = Record<string, any>, S = Record<
             return containerDOM.getBoundingClientRect();
         }
         return DefaultDOMRect;
-    }
-
-    _getTranslate = (e: any): Translate => {
-        const { left, top, width, height } = this._getImageBounds();
-        const { width: containerWidth, height: containerHeight } = this._getContainerBounds();
-
-        return {
-            x: left + width / 2 - containerWidth / 2,
-            y: top + height / 2 - containerHeight / 2,
-        };
     }
 
     _getAdaptationZoom = () => {
@@ -132,7 +134,7 @@ export default class PreviewImageFoundation<P = Record<string, any>, S = Record<
             this.originImageWidth = w;
             this.setState({
                 loading: false,
-            } as any);
+            });
             // 图片初次加载，计算 zoom，zoom 改变不需要通过回调透出
             // When the image is loaded for the first time, zoom is calculated, and zoom changes do not need to be exposed through callbacks.
             this.initializeImage(false);
@@ -145,7 +147,7 @@ export default class PreviewImageFoundation<P = Record<string, any>, S = Record<
         const { onError, src } = this.getProps();
         this.setState({
             loading: false,
-        } as any);
+        });
         onError && onError(src);
     }
 
@@ -172,7 +174,7 @@ export default class PreviewImageFoundation<P = Record<string, any>, S = Record<
                 x: 0,
                 y: 0
             }
-        } as any);
+        });
     }
 
     initializeImage = (notify = true) => {
@@ -215,10 +217,10 @@ export default class PreviewImageFoundation<P = Record<string, any>, S = Record<
         };
     };
 
-    changeZoom = (newZoom: number, e?: WheelEvent): void => {
+    changeZoom = (newZoom: number, e?: GlobalEventHandlersEventMap['wheel']): void => {
         const imageDOM = this._adapter.getImage();
         const { currZoom, translate, width, height } = this.getStates();
-        const { rotation } = this.getProps();
+        const { rotation } = this._adapter.getProps();
         const changeScale = newZoom / (currZoom || 1);
         const newWidth = Math.floor(this.originImageWidth * newZoom);
         const newHeight = Math.floor(this.originImageHeight * newZoom);
@@ -254,12 +256,12 @@ export default class PreviewImageFoundation<P = Record<string, any>, S = Record<
 
         const newTranslate = this.getSafeTranslate(newImageBound.width, newImageBound.height, newTranslateX, newTranslateY);
 
-        this.setState({
+        this._adapter.setState({
             translate: newTranslate,
             width: newWidth,
             height: newHeight,
             currZoom: newZoom,
-        } as any);
+        });
         if (imageDOM) {
             const { canDragVertical, canDragHorizontal } = this.getCanDragDirection(newImageBound.width, newImageBound.height);
             const canDrag = canDragVertical || canDragHorizontal;
@@ -314,7 +316,7 @@ export default class PreviewImageFoundation<P = Record<string, any>, S = Record<
 
             this.setState({
                 translate: newTranslate,
-            } as any);
+            });
 
             this.startMouseClientPosition = {
                 x: clientX,

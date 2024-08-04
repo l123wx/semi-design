@@ -8,7 +8,11 @@ import log from '../utils/log';
 import { noop } from 'lodash';
 
 export type noopFunction = (...args: any) => any;
-export interface DefaultAdapter<P = Record<string, any>, S = Record<string, any>> {
+
+export type BaseAdapterProps = Record<string, any>;
+export type BaseAdapterStates = Record<string, any>;
+
+export interface DefaultAdapter<P = BaseAdapterProps, S = BaseAdapterStates> {
     getContext(key: string): any;
     getContexts(): any;
     getProp(key: string): any;

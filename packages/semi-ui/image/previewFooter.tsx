@@ -55,7 +55,7 @@ export default class Footer extends BaseComponent<FooterProps> {
 
     get adapter(): PreviewFooterAdapter<FooterProps> {
         return {
-            ...super.adapter,
+            ...super.baseAdapter,
         };
     }
 
@@ -95,11 +95,12 @@ export default class Footer extends BaseComponent<FooterProps> {
     }
 
     customRenderViewMenu = (): ReactNode => {
-        const { min, max, step, curPage, totalNum, ratio, zoom, disabledPrev, disabledNext, 
-            disableDownload, onNext, onPrev, onDownload, renderPreviewMenu } 
-        = this.props;
+        const { min, max, step, curPage, totalNum, ratio, zoom, disabledPrev, disabledNext,
+            disableDownload, onNext, onPrev, onDownload, renderPreviewMenu }
+            = this.props;
 
-        const props = { min, max, step, curPage, totalNum, ratio, zoom,
+        const props = {
+            min, max, step, curPage, totalNum, ratio, zoom,
             disabledPrev, disabledNext, disableDownload, onNext, onPrev, onDownload,
             onRotateLeft: this.handleRotateLeft,
             onRotateRight: this.handleRotateRight,
@@ -121,7 +122,7 @@ export default class Footer extends BaseComponent<FooterProps> {
             <Tooltip content={content} key={`tooltip-${key}`} zIndex={zIndex + 1}>
                 {element}
             </Tooltip>
-        ): element;
+        ) : element;
     }
 
     getLocalTextByKey = (key: string) => (
@@ -159,8 +160,8 @@ export default class Footer extends BaseComponent<FooterProps> {
         const disabledZoomOut = zoom === min;
         const icon = <IconMinus
             key="minus"
-            size="large" 
-            onClick={!disabledZoomOut ? this.handleMinusClick : undefined} 
+            size="large"
+            onClick={!disabledZoomOut ? this.handleMinusClick : undefined}
             className={disabledZoomOut ? `${footerPrefixCls}-disabled` : ""}
         />;
         const content = zoomOutTip ?? this.getLocalTextByKey("zoomOutTip");
@@ -172,8 +173,8 @@ export default class Footer extends BaseComponent<FooterProps> {
         const disabledZoomIn = zoom === max;
         const icon = <IconPlus
             key="plus"
-            size="large" 
-            onClick={!disabledZoomIn ? this.handlePlusClick : undefined}  
+            size="large"
+            onClick={!disabledZoomIn ? this.handlePlusClick : undefined}
             className={disabledZoomIn ? `${footerPrefixCls}-disabled` : ""}
         />;
         const content = zoomInTip ?? this.getLocalTextByKey("zoomInTip");
@@ -244,7 +245,7 @@ export default class Footer extends BaseComponent<FooterProps> {
                 max={max}
                 step={step}
                 tipFormatter={(v): string => `${v}%`}
-                tooltipVisible={showTooltip ? undefined : false }
+                tooltipVisible={showTooltip ? undefined : false}
                 onChange={this.handleSlideChange}
             />
         );
@@ -264,7 +265,7 @@ export default class Footer extends BaseComponent<FooterProps> {
 
     getFooterMenu = () => {
         const menuItems = this.getMenu();
-        menuItems.splice(3, 0, <Divider layout="vertical" key={"divider-first"}/>);
+        menuItems.splice(3, 0, <Divider layout="vertical" key={"divider-first"} />);
         menuItems.splice(8, 0, <Divider layout="vertical" key={"divider-second"} />);
         return menuItems;
     }

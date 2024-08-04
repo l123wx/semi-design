@@ -43,24 +43,24 @@ export default class BaseComponent<P extends BaseProps = {}, S = {}> extends Com
         this.cache = {};
     }
 
-    get adapter(): DefaultAdapter<P, S> { // eslint-disable-line
+    get baseAdapter(): DefaultAdapter<P, S> {
         return {
-            getContext: key => { // eslint-disable-line
+            getContext: key => {
                 if (this.context && key) {
                     return this.context[key];
                 }
             },
-            getContexts: () => this.context, // eslint-disable-line
-            getProp: key => this.props[key], // eslint-disable-line
+            getContexts: () => this.context,
+            getProp: key => this.props[key],
             // return all props
-            getProps: () => this.props, // eslint-disable-line
-            getState: key => this.state[key], // eslint-disable-line
-            getStates: () => this.state, // eslint-disable-line
-            setState: (states, cb) => this.setState({ ...states } as S, cb), // eslint-disable-line
-            getCache: key => key && this.cache[key], // eslint-disable-line
-            getCaches: () => this.cache, // eslint-disable-line
-            setCache: (key, value) => key && (this.cache[key] = value), // eslint-disable-line
-            stopPropagation: e => { // eslint-disable-line
+            getProps: () => this.props,
+            getState: key => this.state[key],
+            getStates: () => this.state,
+            setState: (states, cb) => this.setState({ ...states }, cb),
+            getCache: key => key && this.cache[key],
+            getCaches: () => this.cache,
+            setCache: (key, value) => key && (this.cache[key] = value),
+            stopPropagation: e => {
                 try {
                     e.stopPropagation();
                     e.nativeEvent && e.nativeEvent.stopImmediatePropagation();

@@ -77,7 +77,7 @@ class Spin extends BaseComponent<SpinProps, SpinState> {
 
     get adapter() {
         return {
-            ...super.adapter,
+            ...super.baseAdapter,
             setLoading: (value: boolean) => {
                 this.setState({ loading: value });
             }
@@ -101,7 +101,7 @@ class Spin extends BaseComponent<SpinProps, SpinState> {
                 <SpinIcon />
             )}
             {tip ? <div x-semi-prop="tip">{tip}</div> : null}
-        </div>:null;
+        </div> : null;
     }
 
     render() {
